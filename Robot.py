@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import math
 
 class Robot(object):
 
@@ -50,7 +51,11 @@ class Robot(object):
             #pass
             self.t += 1
             self.epsilon = 1.0/self.t
-
+            if self.alpha <= 0:
+                self.alpha = 0
+            else:
+                a= math.pi/2/3000
+                self.alpha = 0.5*math.cos(a * self.t)
         return self.epsilon
 
     def sense_state(self):
@@ -71,10 +76,13 @@ class Robot(object):
         # If Qtable[state] already exits, then do
         # not change it.
         # pass
-        if state not in self.Qtable:
-            self.Qtable[state] = {}
-            for action in self.valid_actions:
-                self.Qtable[state][action] = 0.0
+
+        #if state not in self.Qtable:
+        #    self.Qtable[state] = {}
+        #    for action in self.valid_actions:
+        #        self.Qtable[state][action] = 0.0
+
+        self.Qtable.setdefault(state, {a: 0.0 for a in self.valid_actions})
 
     def choose_action(self):
         """
